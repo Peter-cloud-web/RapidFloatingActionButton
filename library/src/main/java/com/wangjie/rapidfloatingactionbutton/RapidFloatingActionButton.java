@@ -1,5 +1,7 @@
 package com.wangjie.rapidfloatingactionbutton;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -13,18 +15,15 @@ import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.nineoldandroids.animation.AnimatorSet;
-import com.nineoldandroids.animation.ObjectAnimator;
-import com.wangjie.androidbucket.utils.ABTextUtil;
-import com.wangjie.androidbucket.utils.ABViewUtil;
-import com.wangjie.androidbucket.utils.imageprocess.ABImageProcess;
-import com.wangjie.androidbucket.utils.imageprocess.ABShape;
 import com.wangjie.rapidfloatingactionbutton.constants.RFABConstants;
 import com.wangjie.rapidfloatingactionbutton.constants.RFABSize;
 import com.wangjie.rapidfloatingactionbutton.listener.OnRapidFloatingActionListener;
 import com.wangjie.rapidfloatingactionbutton.listener.OnRapidFloatingButtonSeparateListener;
+import com.wangjie.rapidfloatingactionbutton.util.RFABImageUtil;
+import com.wangjie.rapidfloatingactionbutton.util.RFABShape;
+import com.wangjie.rapidfloatingactionbutton.util.RFABTextUtil;
+import com.wangjie.rapidfloatingactionbutton.util.RFABViewUtil;
 import com.wangjie.rapidfloatingactionbutton.widget.CircleButtonDrawable;
 import com.wangjie.rapidfloatingactionbutton.widget.CircleButtonProperties;
 
@@ -162,7 +161,7 @@ public class RapidFloatingActionButton extends FrameLayout implements View.OnCli
     private void initAfterConstructor() {
         this.setOnClickListener(this);
         // 中间图片大小24dp
-        buttonDrawableSize = ABTextUtil.dip2px(getContext(), RFABConstants.SIZE.RFAB_DRAWABLE_SIZE_DP);
+        buttonDrawableSize = RFABTextUtil.dip2px(getContext(), RFABConstants.SIZE.RFAB_DRAWABLE_SIZE_DP);
 
         refreshRFABDisplay();
     }
@@ -172,14 +171,14 @@ public class RapidFloatingActionButton extends FrameLayout implements View.OnCli
      */
     private void refreshRFABDisplay() {
         if (null == buttonDrawable) {
-            buttonDrawable = ABImageProcess.getResourceDrawableBounded(getContext(), DEFAULT_BUTTON_DRAWABLE_RES_ID, buttonDrawableSize);
+            buttonDrawable = RFABImageUtil.getResourceDrawableBounded(getContext(), DEFAULT_BUTTON_DRAWABLE_RES_ID, buttonDrawableSize);
         }
 
         // 设置rfab的背景图片
         CircleButtonDrawable normalDrawable = new CircleButtonDrawable(getContext(), rfabProperties, normalColor);
-        ABViewUtil.setBackgroundDrawable(
+        RFABViewUtil.setBackgroundDrawable(
                 this,
-                ABShape.selectorClickSimple(
+                RFABShape.selectorClickSimple(
                         normalDrawable,
                         new CircleButtonDrawable(getContext(), rfabProperties, pressedColor)
                 )
@@ -276,23 +275,23 @@ public class RapidFloatingActionButton extends FrameLayout implements View.OnCli
     public void onExpandAnimator(AnimatorSet animatorSet) {
         ensureDrawableAnimator();
         ensureDrawableInterpolator();
-//        mDrawableAnimator.cancel();
-//        mDrawableAnimator.setTarget(centerDrawableIv);
-//        mDrawableAnimator.setFloatValues(0, -45f);
-//        mDrawableAnimator.setPropertyName("rotation");
-//        mDrawableAnimator.setInterpolator(mOvershootInterpolator);
-//        animatorSet.playTogether(mDrawableAnimator);
+        mDrawableAnimator.cancel();
+        mDrawableAnimator.setTarget(centerDrawableIv);
+        mDrawableAnimator.setFloatValues(0, -45f);
+        mDrawableAnimator.setPropertyName("rotation");
+        mDrawableAnimator.setInterpolator(mOvershootInterpolator);
+        animatorSet.playTogether(mDrawableAnimator);
     }
 
     public void onCollapseAnimator(AnimatorSet animatorSet) {
         ensureDrawableAnimator();
         ensureDrawableInterpolator();
-//        mDrawableAnimator.cancel();
-//        mDrawableAnimator.setTarget(centerDrawableIv);
-//        mDrawableAnimator.setFloatValues(-45f, 0);
-//        mDrawableAnimator.setPropertyName("rotation");
-//        mDrawableAnimator.setInterpolator(mOvershootInterpolator);
-//        animatorSet.playTogether(mDrawableAnimator);
+        mDrawableAnimator.cancel();
+        mDrawableAnimator.setTarget(centerDrawableIv);
+        mDrawableAnimator.setFloatValues(-45f, 0);
+        mDrawableAnimator.setPropertyName("rotation");
+        mDrawableAnimator.setInterpolator(mOvershootInterpolator);
+        animatorSet.playTogether(mDrawableAnimator);
     }
 
     /**
@@ -312,4 +311,5 @@ public class RapidFloatingActionButton extends FrameLayout implements View.OnCli
             mOvershootInterpolator = new OvershootInterpolator();
         }
     }
+
 }
